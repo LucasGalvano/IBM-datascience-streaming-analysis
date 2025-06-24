@@ -12,6 +12,16 @@ def clean_data():
         raw_path = data_dir / f"{company}_raw.csv"
         
         df = pd.read_csv(raw_path, skipfooter=7, engine="python")
+
+        df.columns = df.columns.str.strip().str.replace("*", "").str.replace("**", "")
+        
+        column_mapping = {
+            "Close": "Close",
+            "Adj Close": "Adj_Close",
+            "Volume": "Volume",
+            "Date": "Date"
+        }
+        df = df.rename(columns=column_mapping)
         
         df.columns = df.columns.str.strip()
         df["Volume"] = pd.to_numeric(df["Volume"].astype(str).str.replace(",", ""), errors="coerce")
